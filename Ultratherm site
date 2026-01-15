@@ -1,0 +1,2118 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+		<meta name="generator" content="Hostinger Horizons" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Hostinger Horizons</title>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="module" src="/src/main.jsx"></script>
+	</body>
+</html>
+{
+  "name": "web-app",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host :: --port 3000",
+    "build": "node tools/generate-llms.js || true && vite build",
+    "preview": "vite preview --host :: --port 3000",
+    "lint": "eslint . --quiet",
+    "lint:warn": "eslint ."
+  },
+  "dependencies": {
+    "@radix-ui/react-alert-dialog": "^1.1.4",
+    "@radix-ui/react-avatar": "^1.1.2",
+    "@radix-ui/react-checkbox": "^1.1.3",
+    "@radix-ui/react-dialog": "^1.1.4",
+    "@radix-ui/react-dropdown-menu": "^2.1.4",
+    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-slider": "^1.2.2",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-tabs": "^1.1.2",
+    "@radix-ui/react-toast": "^1.2.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
+    "lucide-react": "^0.469.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-helmet": "^6.1.0",
+    "react-router-dom": "^6.16.0",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@babel/generator": "^7.26.3",
+    "@babel/parser": "^7.26.3",
+    "@babel/traverse": "^7.26.4",
+    "@babel/types": "^7.26.3",
+    "@types/node": "^20.17.10",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.14.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "terser": "^5.37.0",
+    "vite": "^4.4.5"
+  }
+}
+export default {
+	plugins: {
+		tailwindcss: {},
+		autoprefixer: {},
+	},
+};
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import HomePage from '@/pages/HomePage';
+import ProductsPage from '@/pages/ProductsPage';
+import AboutPage from '@/pages/AboutPage';
+import ContactPage from '@/pages/ContactPage';
+import { Toaster } from '@/components/ui/toaster';
+
+function App() {
+  return (
+    <Router>
+      <Helmet>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+      </Helmet>
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <Navigation />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+          </Routes>
+        </main>
+        <Footer />
+        <Toaster />
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+import React from 'react';
+import { motion } from 'framer-motion';
+
+const CallToAction = () => {
+  return (
+    <motion.h1
+      className='text-xl font-bold text-white leading-8 w-full'
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.5 }}
+    >
+      Let's turn your ideas into reality
+    </motion.h1>
+  );
+};
+
+export default CallToAction;
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Mail, Phone, MapPin, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import LogoComponent from '@/components/LogoComponent';
+
+const Footer = () => {
+  const [email, setEmail] = useState('');
+  const { toast } = useToast();
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    if (email) {
+      toast({
+        title: 'Inscrição realizada!',
+        description: 'Obrigado por se inscrever em nossa newsletter.',
+      });
+      setEmail('');
+    }
+  };
+
+  const quickLinks = [
+    { path: '/', label: 'Home' },
+    { path: '/products', label: 'Produtos' },
+    { path: '/about', label: 'Sobre' },
+    { path: '/contact', label: 'Contato' }
+  ];
+
+  const socialLinks = [
+    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Facebook, href: '#', label: 'Facebook' },
+    { icon: Instagram, href: '#', label: 'Instagram' }
+  ];
+
+  return (
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          <div className="space-y-4">
+            <div className="mb-6">
+              <LogoComponent size="medium" className="[&_span]:text-gray-100 [&_span:last-child]:text-gray-400" />
+            </div>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Mais de 14 anos de excelência em soluções de aquecimento industrial. 
+              Confiabilidade, qualidade e inovação em cada projeto.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-white font-semibold mb-4">Links Rápidos</h3>
+            <ul className="space-y-2">
+              {quickLinks.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="text-sm hover:text-brand-red transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-white font-semibold mb-4">Contato</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2 text-sm">
+                <Phone className="w-4 h-4 mt-0.5 text-brand-blue flex-shrink-0" />
+                <span>(41) 98825-9858</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <Mail className="w-4 h-4 mt-0.5 text-brand-blue flex-shrink-0" />
+                <span>vendas@ultratherm.ind.br</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <MapPin className="w-4 h-4 mt-0.5 text-brand-blue flex-shrink-0" />
+                <span>Rua Emb Jose Carlos De, 185, Xaxim, Curitiba PR, 81810-260</span>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-white font-semibold mb-4">Newsletter</h3>
+            <p className="text-sm text-gray-400 mb-4">
+              Receba novidades e dicas sobre aquecimento industrial
+            </p>
+            <form onSubmit={handleNewsletterSubmit} className="space-y-2">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Seu e-mail"
+                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-brand-blue transition-colors"
+                required
+              />
+              <button
+                type="submit"
+                className="w-full bg-brand-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                Inscrever-se
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-gray-400">
+            © {new Date().getFullYear()} Ultratherm. Todos os direitos reservados.
+          </p>
+          <div className="flex items-center gap-4">
+            {socialLinks.map((social) => {
+              const Icon = social.icon;
+              return (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
+                  className="p-2 bg-gray-800 hover:bg-brand-blue rounded-lg transition-colors group"
+                >
+                  <Icon className="w-5 h-5 text-gray-400 group-hover:text-white" />
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+import React from 'react';
+
+const HeroImage = () => {
+  return (
+    <div className="relative w-8 h-8 shrink-0" data-name="ic-sparkles">
+      <svg 
+        width="32" 
+        height="32" 
+        viewBox="0 0 32 32" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full"
+      >
+        <path 
+          d="M11.787 9.5356C11.5053 8.82147 10.4947 8.82147 10.213 9.5356L8.742 13.2654C8.65601 13.4834 8.48343 13.656 8.2654 13.742L4.5356 15.213C3.82147 15.4947 3.82147 16.5053 4.5356 16.787L8.2654 18.258C8.48343 18.344 8.65601 18.5166 8.742 18.7346L10.213 22.4644C10.4947 23.1785 11.5053 23.1785 11.787 22.4644L13.258 18.7346C13.344 18.5166 13.5166 18.344 13.7346 18.258L17.4644 16.787C18.1785 16.5053 18.1785 15.4947 17.4644 15.213L13.7346 13.742C13.5166 13.656 13.344 13.4834 13.258 13.2654L11.787 9.5356Z" 
+          fill="white"
+        />
+        <path 
+          d="M23.5621 2.38257C23.361 1.87248 22.639 1.87248 22.4379 2.38257L21.3871 5.04671C21.3257 5.20245 21.2024 5.32572 21.0467 5.38714L18.3826 6.43787C17.8725 6.63904 17.8725 7.36096 18.3826 7.56214L21.0467 8.61286C21.2024 8.67428 21.3257 8.79755 21.3871 8.95329L22.4379 11.6174C22.639 12.1275 23.361 12.1275 23.5621 11.6174L24.6129 8.95329C24.6743 8.79755 24.7976 8.67428 24.9533 8.61286L27.6174 7.56214C28.1275 7.36096 28.1275 6.63904 27.6174 6.43787L24.9533 5.38714C24.7976 5.32572 24.6743 5.20245 24.6129 5.04671L23.5621 2.38257Z" 
+          fill="white"
+        />
+        <path 
+          d="M23.3373 22.2295C23.2166 21.9235 22.7834 21.9235 22.6627 22.2295L22.0323 23.828C21.9954 23.9215 21.9215 23.9954 21.828 24.0323L20.2295 24.6627C19.9235 24.7834 19.9235 25.2166 20.2295 25.3373L21.828 25.9677C21.9215 26.0046 21.9954 26.0785 22.0323 26.172L22.6627 27.7705C22.7834 28.0765 23.2166 28.0765 23.3373 27.7705L23.9677 26.172C24.0046 26.0785 24.0785 26.0046 24.172 25.9677L25.7705 25.3373C26.0765 25.2166 26.0765 24.7834 25.7705 24.6627L24.172 24.0323C24.0785 23.9954 24.0046 23.9215 23.9677 23.828L23.3373 22.2295Z" 
+          fill="white"
+        />
+      </svg>
+    </div>
+  );
+};
+
+export default HeroImage;
+import React from 'react';
+import { cn } from '@/lib/utils';
+
+const LogoComponent = ({ size = 'medium', className }) => {
+  const sizeClasses = {
+    small: 'h-8',
+    medium: 'h-10',
+    large: 'h-16'
+  };
+
+  const imageClasses = {
+    small: 'w-8 h-8',
+    medium: 'w-10 h-10',
+    large: 'w-16 h-16'
+  };
+
+  const textSizes = {
+    small: 'text-lg',
+    medium: 'text-xl sm:text-2xl',
+    large: 'text-3xl sm:text-4xl'
+  };
+
+  const subtitleSizes = {
+    small: 'text-[0.6rem]',
+    medium: 'text-xs',
+    large: 'text-sm'
+  };
+
+  return (
+    <div className={cn("flex items-center gap-2", className)}>
+      <div className={cn("relative flex-shrink-0", imageClasses[size])}>
+        <img 
+          src="https://horizons-cdn.hostinger.com/49c9e461-bbe2-4a06-9d20-734831b91504/4505e6c5440f99c921e3cd028211f41f.png"
+          alt="Ultratherm Logo"
+          className="w-full h-full object-contain"
+        />
+      </div>
+      <div className="flex flex-col">
+        <span className={cn("font-bold text-gray-900 leading-none tracking-tight", textSizes[size])}>
+          ULTRATHERM
+        </span>
+        <span className={cn("text-gray-600 font-medium leading-none mt-0.5", subtitleSizes[size])}>
+          Soluções em Aquecimento
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default LogoComponent;
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import LogoComponent from '@/components/LogoComponent';
+
+const Navigation = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location]);
+
+  const navLinks = [
+    { path: '/', label: 'Home' },
+    { path: '/products', label: 'Produtos' },
+    { path: '/about', label: 'Sobre' },
+    { path: '/contact', label: 'Contato' }
+  ];
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-sm'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16 sm:h-20">
+          <Link to="/" className="flex items-center group">
+            <LogoComponent size="medium" />
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`text-base font-medium transition-colors relative group ${
+                  location.pathname === link.path
+                    ? 'text-brand-blue'
+                    : 'text-gray-700 hover:text-brand-blue'
+                }`}
+              >
+                {link.label}
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 bg-brand-blue transition-transform origin-left ${
+                    location.pathname === link.path
+                      ? 'scale-x-100'
+                      : 'scale-x-0 group-hover:scale-x-100'
+                  }`}
+                />
+              </Link>
+            ))}
+          </div>
+
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6 text-gray-900" />
+            ) : (
+              <Menu className="w-6 h-6 text-gray-900" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-t border-gray-200"
+          >
+            <div className="px-4 py-4 space-y-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`block px-4 py-2 rounded-lg text-base font-medium transition-colors ${
+                    location.pathname === link.path
+                      ? 'bg-blue-50 text-brand-blue'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+};
+
+export default Navigation;
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+
+const ServiceCard = ({ icon: Icon, title, description, index }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ scale: 1.05 }}
+      className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 sm:p-8 group cursor-pointer border border-transparent hover:border-brand-blue/10"
+    >
+      <div className="bg-brand-blue w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
+        <Icon className="w-7 h-7 text-white" />
+      </div>
+      <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-brand-blue transition-colors">{title}</h3>
+      <p className="text-gray-600 text-sm leading-relaxed mb-4">{description}</p>
+      <button className="flex items-center gap-2 text-brand-blue font-medium text-sm group-hover:gap-3 group-hover:text-brand-red transition-all">
+        Saiba Mais
+        <ArrowRight className="w-4 h-4" />
+      </button>
+    </motion.div>
+  );
+};
+
+export default ServiceCard;
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Star, Quote } from 'lucide-react';
+
+const TestimonialCard = ({ name, company, testimonial, rating, avatar, index }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="bg-white rounded-xl shadow-lg p-6 sm:p-8 hover:shadow-xl transition-shadow border-t-4 border-transparent hover:border-brand-red"
+    >
+      <Quote className="w-10 h-10 text-blue-200 mb-4" />
+      <p className="text-gray-700 italic mb-6 leading-relaxed">{testimonial}</p>
+      
+      <div className="flex items-center gap-4">
+        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-brand-blue font-semibold text-lg">
+          {name.charAt(0)}
+        </div>
+        <div>
+          <p className="font-semibold text-gray-900">{name}</p>
+          <p className="text-sm text-gray-600">{company}</p>
+        </div>
+      </div>
+      
+      <div className="flex gap-1 mt-4">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={`w-4 h-4 ${
+              i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+            }`}
+          />
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+export default TestimonialCard;
+import React from 'react';
+import { motion } from 'framer-motion';
+
+const WelcomeMessage = () => {
+  return (
+    <motion.p
+      className='text-sm text-white leading-5 w-full'
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.8 }}
+    >
+      Write in the chat what you want to create.
+    </motion.p>
+  );
+};
+
+export default WelcomeMessage;
+import { cn } from '@/lib/utils';
+import { Slot } from '@radix-ui/react-slot';
+import { cva } from 'class-variance-authority';
+import React from 'react';
+
+const buttonVariants = cva(
+	'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+	{
+		variants: {
+			variant: {
+				default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+				destructive:
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+				outline:
+          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+				secondary:
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+				ghost: 'hover:bg-accent hover:text-accent-foreground',
+				link: 'text-primary underline-offset-4 hover:underline',
+			},
+			size: {
+				default: 'h-10 px-4 py-2',
+				sm: 'h-9 rounded-md px-3',
+				lg: 'h-11 rounded-md px-8',
+				icon: 'h-10 w-10',
+			},
+		},
+		defaultVariants: {
+			variant: 'default',
+			size: 'default',
+		},
+	},
+);
+
+const Button = React.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
+	const Comp = asChild ? Slot : 'button';
+	return (
+		<Comp
+			className={cn(buttonVariants({ variant, size, className }))}
+			ref={ref}
+			{...props}
+		/>
+	);
+});
+Button.displayName = 'Button';
+
+export { Button, buttonVariants };
+import { cn } from '@/lib/utils';
+import * as ToastPrimitives from '@radix-ui/react-toast';
+import { cva } from 'class-variance-authority';
+import { X } from 'lucide-react';
+import React from 'react';
+
+const ToastProvider = ToastPrimitives.Provider;
+
+const ToastViewport = React.forwardRef(({ className, ...props }, ref) => (
+	<ToastPrimitives.Viewport
+		ref={ref}
+		className={cn(
+			'fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]',
+			className,
+		)}
+		{...props}
+	/>
+));
+ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
+
+const toastVariants = cva(
+	'data-[swipe=move]:transition-none group relative pointer-events-auto flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full data-[state=closed]:slide-out-to-right-full',
+	{
+		variants: {
+			variant: {
+				default: 'bg-background border',
+				destructive:
+          'group destructive border-destructive bg-destructive text-destructive-foreground',
+			},
+		},
+		defaultVariants: {
+			variant: 'default',
+		},
+	},
+);
+
+const Toast = React.forwardRef(({ className, variant, ...props }, ref) => {
+	return (
+		<ToastPrimitives.Root
+			ref={ref}
+			className={cn(toastVariants({ variant }), className)}
+			{...props}
+		/>
+	);
+});
+Toast.displayName = ToastPrimitives.Root.displayName;
+
+const ToastAction = React.forwardRef(({ className, ...props }, ref) => (
+	<ToastPrimitives.Action
+		ref={ref}
+		className={cn(
+			'inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-destructive/30 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive',
+			className,
+		)}
+		{...props}
+	/>
+));
+ToastAction.displayName = ToastPrimitives.Action.displayName;
+
+const ToastClose = React.forwardRef(({ className, ...props }, ref) => (
+	<ToastPrimitives.Close
+		ref={ref}
+		className={cn(
+			'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
+			className,
+		)}
+		toast-close=""
+		{...props}
+	>
+		<X className="h-4 w-4" />
+	</ToastPrimitives.Close>
+));
+ToastClose.displayName = ToastPrimitives.Close.displayName;
+
+const ToastTitle = React.forwardRef(({ className, ...props }, ref) => (
+	<ToastPrimitives.Title
+		ref={ref}
+		className={cn('text-sm font-semibold', className)}
+		{...props}
+	/>
+));
+ToastTitle.displayName = ToastPrimitives.Title.displayName;
+
+const ToastDescription = React.forwardRef(({ className, ...props }, ref) => (
+	<ToastPrimitives.Description
+		ref={ref}
+		className={cn('text-sm opacity-90', className)}
+		{...props}
+	/>
+));
+ToastDescription.displayName = ToastPrimitives.Description.displayName;
+
+export {
+	Toast,
+	ToastAction,
+	ToastClose,
+	ToastDescription,
+	ToastProvider,
+	ToastTitle,
+	ToastViewport,
+};
+import {
+	Toast,
+	ToastClose,
+	ToastDescription,
+	ToastProvider,
+	ToastTitle,
+	ToastViewport,
+} from '@/components/ui/toast';
+import { useToast } from '@/components/ui/use-toast';
+import React from 'react';
+
+export function Toaster() {
+	const { toasts } = useToast();
+
+	return (
+		<ToastProvider>
+			{toasts.map(({ id, title, description, action, ...props }) => {
+				return (
+					<Toast key={id} {...props}>
+						<div className="grid gap-1">
+							{title && <ToastTitle>{title}</ToastTitle>}
+							{description && (
+								<ToastDescription>{description}</ToastDescription>
+							)}
+						</div>
+						{action}
+						<ToastClose />
+					</Toast>
+				);
+			})}
+			<ToastViewport />
+		</ToastProvider>
+	);
+}
+import { useState, useEffect } from "react"
+
+const TOAST_LIMIT = 1
+
+let count = 0
+function generateId() {
+  count = (count + 1) % Number.MAX_VALUE
+  return count.toString()
+}
+
+const toastStore = {
+  state: {
+    toasts: [],
+  },
+  listeners: [],
+  
+  getState: () => toastStore.state,
+  
+  setState: (nextState) => {
+    if (typeof nextState === 'function') {
+      toastStore.state = nextState(toastStore.state)
+    } else {
+      toastStore.state = { ...toastStore.state, ...nextState }
+    }
+    
+    toastStore.listeners.forEach(listener => listener(toastStore.state))
+  },
+  
+  subscribe: (listener) => {
+    toastStore.listeners.push(listener)
+    return () => {
+      toastStore.listeners = toastStore.listeners.filter(l => l !== listener)
+    }
+  }
+}
+
+export const toast = ({ ...props }) => {
+  const id = generateId()
+
+  const update = (props) =>
+    toastStore.setState((state) => ({
+      ...state,
+      toasts: state.toasts.map((t) =>
+        t.id === id ? { ...t, ...props } : t
+      ),
+    }))
+
+  const dismiss = () => toastStore.setState((state) => ({
+    ...state,
+    toasts: state.toasts.filter((t) => t.id !== id),
+  }))
+
+  toastStore.setState((state) => ({
+    ...state,
+    toasts: [
+      { ...props, id, dismiss },
+      ...state.toasts,
+    ].slice(0, TOAST_LIMIT),
+  }))
+
+  return {
+    id,
+    dismiss,
+    update,
+  }
+}
+
+export function useToast() {
+  const [state, setState] = useState(toastStore.getState())
+  
+  useEffect(() => {
+    const unsubscribe = toastStore.subscribe((state) => {
+      setState(state)
+    })
+    
+    return unsubscribe
+  }, [])
+  
+  useEffect(() => {
+    const timeouts = []
+
+    state.toasts.forEach((toast) => {
+      if (toast.duration === Infinity) {
+        return
+      }
+
+      const timeout = setTimeout(() => {
+        toast.dismiss()
+      }, toast.duration || 5000)
+
+      timeouts.push(timeout)
+    })
+
+    return () => {
+      timeouts.forEach((timeout) => clearTimeout(timeout))
+    }
+  }, [state.toasts])
+
+  return {
+    toast,
+    toasts: state.toasts,
+  }
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand Colors - Blue #0066CC and Red #DC2626 */
+    --brand-blue: 210 100% 40%;
+    --brand-red: 0 72% 51%;
+
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Primary is now Brand Blue */
+    --primary: 210 100% 40%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    /* Destructive is close to Brand Red */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 210 100% 40%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 100% 50%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+  @apply text-4xl font-bold;
+}
+h2 {
+  @apply text-3xl font-bold;
+}
+h3 {
+  @apply text-2xl font-semibold;
+}
+p {
+  @apply text-base;
+}
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs) {
+	return twMerge(clsx(inputs));
+}
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from '@/App';
+import '@/index.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <App />
+);
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
+import { Lightbulb, Award, Shield, Leaf, Target, Users, TrendingUp, Clock } from 'lucide-react';
+
+const AboutPage = () => {
+  const expertise = [
+    {
+      icon: Lightbulb,
+      title: 'Inovação',
+      description: 'Constante busca por novas tecnologias e soluções que revolucionam o mercado de aquecimento industrial.'
+    },
+    {
+      icon: Award,
+      title: 'Qualidade',
+      description: 'Padrões rigorosos de qualidade em todos os processos, desde o projeto até a instalação final.'
+    },
+    {
+      icon: Shield,
+      title: 'Confiabilidade',
+      description: 'Compromisso com prazos, segurança e resultados que superam as expectativas dos clientes.'
+    },
+    {
+      icon: Leaf,
+      title: 'Sustentabilidade',
+      description: 'Soluções eco-eficientes que reduzem impacto ambiental e otimizam o consumo energético.'
+    }
+  ];
+
+  const values = [
+    {
+      icon: Target,
+      title: 'Foco no Cliente',
+      description: 'Cada projeto é desenvolvido com atenção total às necessidades específicas de nossos clientes.'
+    },
+    {
+      icon: Users,
+      title: 'Trabalho em Equipe',
+      description: 'Colaboração entre profissionais altamente qualificados para entregar as melhores soluções.'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Melhoria Contínua',
+      description: 'Investimento constante em capacitação e aprimoramento de processos e tecnologias.'
+    },
+    {
+      icon: Clock,
+      title: 'Compromisso',
+      description: 'Pontualidade, transparência e dedicação em cada etapa dos nossos projetos.'
+    }
+  ];
+
+  const timeline = [
+    { year: '2010', event: 'Fundação da Ultratherm' },
+    { year: '2013', event: 'Expansão para novos mercados' },
+    { year: '2017', event: 'Certificação ISO 9001' },
+    { year: '2020', event: 'Lançamento de soluções sustentáveis' },
+    { year: '2024', event: 'Mais de 500 projetos concluídos' }
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Sobre Nós - Ultratherm</title>
+        <meta name="description" content="Conheça a Ultratherm: 14+ anos de experiência em aquecimento industrial. História, valores e expertise que nos tornam líderes no mercado." />
+      </Helmet>
+
+      <div className="pt-16 sm:pt-20">
+        <section className="relative h-[400px] sm:h-[500px] flex items-center justify-center overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1583737177686-bbee18dfbecd)' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-800/70" />
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white text-center"
+          >
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+              Sobre a Ultratherm
+            </h1>
+            <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto">
+              Excelência em aquecimento industrial há mais de 14 anos
+            </p>
+          </motion.div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+                  Nossa História
+                </h2>
+                <div className="space-y-4 text-gray-700 leading-relaxed">
+                  <p>
+                    Fundada em 2010, a Ultratherm nasceu com a missão de revolucionar o mercado de aquecimento industrial no Brasil. Com uma equipe formada por engenheiros experientes e apaixonados por tecnologia, começamos oferecendo soluções personalizadas para pequenas e médias indústrias.
+                  </p>
+                  <p>
+                    Ao longo de mais de 14 anos, expandimos nossa atuação e nos tornamos referência nacional em sistemas de aquecimento industrial. Nosso compromisso com a qualidade, inovação e satisfação do cliente nos permitiu crescer de forma consistente e sustentável.
+                  </p>
+                  <p>
+                    Hoje, atendemos diversos segmentos industriais, desde metalurgia e química até alimentos e plásticos, sempre com o mesmo padrão de excelência que nos caracteriza desde o início.
+                  </p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6">Nossa Trajetória</h3>
+                  <div className="space-y-6">
+                    {timeline.map((item, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className="flex items-start gap-4"
+                      >
+                        <div className="bg-brand-blue text-white font-bold px-4 py-2 rounded-lg flex-shrink-0">
+                          {item.year}
+                        </div>
+                        <p className="text-gray-700 pt-2">{item.event}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-gradient-to-br from-gray-50 to-blue-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12 sm:mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Nossa Expertise
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Pilares que fundamentam nossa excelência no mercado
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+              {expertise.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow text-center"
+                  >
+                    <div className="bg-brand-blue w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{item.title}</h3>
+                    <p className="text-gray-600 text-sm">{item.description}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12 sm:mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Valores da Empresa
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Princípios que guiam todas as nossas ações e decisões
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+              {values.map((value, index) => {
+                const Icon = value.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-all"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="bg-brand-blue w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{value.title}</h3>
+                        <p className="text-gray-600">{value.description}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+};
+
+export default AboutPage;
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
+import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+
+const ContactPage = () => {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    message: ''
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Nome é obrigatório';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'E-mail é obrigatório';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'E-mail inválido';
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Telefone é obrigatório';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Mensagem é obrigatória';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (validateForm()) {
+      toast({
+        title: 'Mensagem enviada com sucesso!',
+        description: 'Nossa equipe entrará em contato em breve.',
+      });
+
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        message: ''
+      });
+    } else {
+      toast({
+        title: 'Erro no formulário',
+        description: 'Por favor, preencha todos os campos obrigatórios.',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const contactInfo = [
+    {
+      icon: Phone,
+      title: 'Telefone',
+      content: '(41) 98825-9858',
+      link: 'tel:+5541988259858'
+    },
+    {
+      icon: Mail,
+      title: 'E-mail',
+      content: 'vendas@ultratherm.ind.br',
+      link: 'mailto:vendas@ultratherm.ind.br'
+    },
+    {
+      icon: MapPin,
+      title: 'Endereço',
+      content: 'Rua Emb Jose Carlos De, 185, Xaxim, Curitiba PR, 81810-260, Brasil',
+      link: '#'
+    },
+    {
+      icon: Clock,
+      title: 'Horário',
+      content: (
+        <div className="flex flex-col">
+          <span>Segunda a quinta: 7:30 às 17:30</span>
+          <span>Sexta: 7:30 às 16:30</span>
+        </div>
+      ),
+      link: '#'
+    }
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Contato - Ultratherm</title>
+        <meta name="description" content="Entre em contato com a Ultratherm. Solicite orçamento, tire dúvidas ou conheça nossas soluções em resistências elétricas." />
+      </Helmet>
+
+      <div className="pt-16 sm:pt-20">
+        <section className="relative h-[300px] sm:h-[400px] flex items-center justify-center overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1545289883-f7576023d5e4)' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-800/70" />
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white text-center"
+          >
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+              Entre em Contato
+            </h1>
+            <p className="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto">
+              Estamos prontos para atender suas necessidades
+            </p>
+          </motion.div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-gradient-to-br from-white to-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="lg:col-span-1 space-y-6"
+              >
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+                    Informações de Contato
+                  </h2>
+                  <p className="text-gray-600 mb-8">
+                    Nossa equipe está pronta para atendê-lo e fornecer as melhores soluções para seu negócio.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {contactInfo.map((info, index) => {
+                    const Icon = info.icon;
+                    return (
+                      <motion.a
+                        key={index}
+                        href={info.link}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border-l-4 border-transparent hover:border-brand-blue"
+                      >
+                        <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0">
+                          <Icon className="w-6 h-6 text-brand-blue" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">{info.title}</p>
+                          <div className="text-gray-600 text-sm">{info.content}</div>
+                        </div>
+                      </motion.a>
+                    );
+                  })}
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="lg:col-span-2"
+              >
+                <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 lg:p-10">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+                    Envie sua Mensagem
+                  </h2>
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                          Nome Completo *
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          className={`w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors text-gray-900 ${
+                            errors.name ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="Seu nome"
+                        />
+                        {errors.name && (
+                          <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                          E-mail *
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className={`w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors text-gray-900 ${
+                            errors.email ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="seu@email.com"
+                        />
+                        {errors.email && (
+                          <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                          Telefone *
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          className={`w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors text-gray-900 ${
+                            errors.phone ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="(11) 98765-4321"
+                        />
+                        {errors.phone && (
+                          <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                          Empresa
+                        </label>
+                        <input
+                          type="text"
+                          id="company"
+                          name="company"
+                          value={formData.company}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors text-gray-900"
+                          placeholder="Nome da empresa"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                        Mensagem *
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        rows={5}
+                        className={`w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors resize-none text-gray-900 ${
+                          errors.message ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        placeholder="Descreva suas necessidades..."
+                      />
+                      {errors.message && (
+                        <p className="mt-1 text-sm text-red-500">{errors.message}</p>
+                      )}
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full bg-brand-blue hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors"
+                    >
+                      <Send className="w-5 h-5" />
+                      Enviar Mensagem
+                    </button>
+                  </form>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+};
+
+export default ContactPage;
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { Flame, Layers, Box, Zap, ShieldCheck, ArrowRight, Phone } from 'lucide-react';
+import ServiceCard from '@/components/ServiceCard';
+import TestimonialCard from '@/components/TestimonialCard';
+
+const HomePage = () => {
+  const products = [
+    {
+      icon: Flame,
+      title: 'Coleira de porcelana',
+      description: 'Aquecimento robusto e durável para injetoras e extrusoras, ideal para altas temperaturas.'
+    },
+    {
+      icon: Layers,
+      title: 'Coleira de mica',
+      description: 'Solução versátil e eficiente para aquecimento cilíndrico em diversos processos industriais.'
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Capa térmica',
+      description: 'Isolamento térmico para redução de consumo de energia e proteção contra queimaduras em operadores.'
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: 'Carlos Silva',
+      company: 'Indústria Metalúrgica XYZ',
+      testimonial: 'A Ultratherm transformou nosso processo de aquecimento. Eficiência aumentou 40% e os custos reduziram significativamente.',
+      rating: 5
+    },
+    {
+      name: 'Ana Rodrigues',
+      company: 'Química Avançada Ltda',
+      testimonial: 'Profissionais extremamente competentes. A instalação foi rápida e o suporte técnico é excepcional.',
+      rating: 5
+    },
+    {
+      name: 'Roberto Mendes',
+      company: 'TechPlast Indústrias',
+      testimonial: 'Parceria de longa data. Sempre podemos contar com a expertise e confiabilidade da Ultratherm.',
+      rating: 5
+    },
+    {
+      name: 'Mariana Costa',
+      company: 'Alimentos Pro Brasil',
+      testimonial: 'Investimento que valeu cada centavo. Sistema de aquecimento impecável e equipe altamente profissional.',
+      rating: 5
+    }
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Ultratherm - Aquecimento Industrial de Excelência</title>
+        <meta name="description" content="Mais de 14 anos de experiência em soluções de aquecimento industrial de alto desempenho. Confiabilidade, qualidade e inovação." />
+      </Helmet>
+
+      <div className="pt-16 sm:pt-20">
+        <section className="relative h-[600px] sm:h-[700px] flex items-center justify-center overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: 'url(https://horizons-cdn.hostinger.com/49c9e461-bbe2-4a06-9d20-734831b91504/70578aa054ddcf6e7bf4c64791223193.png)' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-blue-800/70 to-transparent" />
+          
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white"
+          >
+            <div className="max-w-3xl">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+              >
+                Aquecimento Industrial de Excelência
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-lg sm:text-xl mb-8 text-gray-100 leading-relaxed"
+              >
+                Mais de 14 anos de experiência em soluções de aquecimento
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 bg-brand-blue hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all hover:scale-105 shadow-lg"
+                >
+                  Solicitar Orçamento
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12 sm:mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Nossos Produtos em Destaque
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Soluções completas para todas as suas necessidades de aquecimento industrial
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {products.map((product, index) => (
+                <ServiceCard key={index} {...product} index={index} />
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-center mt-12"
+            >
+              <Link
+                to="/products"
+                className="inline-flex items-center gap-2 text-brand-blue hover:text-blue-700 font-semibold text-lg group"
+              >
+                Ver Todos os Produtos
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-gradient-to-br from-gray-50 to-blue-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12 sm:mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                O Que Dizem Nossos Clientes
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Experiências reais de empresas que confiam em nossa expertise
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+              {testimonials.map((testimonial, index) => (
+                <TestimonialCard key={index} {...testimonial} index={index} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-gradient-to-r from-brand-blue to-blue-800 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+                Agende uma Visita
+              </h2>
+              <p className="text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                Entre em contato conosco e descubra como podemos otimizar seus processos de aquecimento industrial
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 bg-white text-brand-blue hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition-all hover:scale-105 shadow-lg"
+                >
+                  <Phone className="w-5 h-5" />
+                  Entrar em Contato
+                </Link>
+                <Link
+                  to="/products"
+                  className="inline-flex items-center gap-2 bg-blue-800 hover:bg-blue-900 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all hover:scale-105"
+                >
+                  Conhecer Produtos
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+};
+
+export default HomePage;
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
+import { Flame, Box, Layers, Zap, Thermometer, ShieldCheck, Ruler, Activity, Settings, Package, Grid, Component } from 'lucide-react';
+import ServiceCard from '@/components/ServiceCard';
+
+const ProductsPage = () => {
+  const products = [
+    {
+      icon: Flame,
+      title: 'Coleira de porcelana',
+      description: 'Aquecimento robusto e durável para injetoras e extrusoras, ideal para altas temperaturas.'
+    },
+    {
+      icon: Layers,
+      title: 'Coleira de mica',
+      description: 'Solução versátil e eficiente para aquecimento cilíndrico em diversos processos industriais.'
+    },
+    {
+      icon: Box,
+      title: 'Coleira de mica em latão',
+      description: 'Alta resistência mecânica e proteção contra vazamentos de material plástico, garantindo maior vida útil.'
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Capa térmica',
+      description: 'Isolamento térmico para redução de consumo de energia e proteção contra queimaduras em operadores.'
+    },
+    {
+      icon: Ruler,
+      title: 'Sobre borda de tanque',
+      description: 'Aquecimento eficiente para tanques e reservatórios, projetado para fácil instalação e manutenção.'
+    },
+    {
+      icon: Thermometer,
+      title: 'Tubular imersão',
+      description: 'Aquecimento direto de líquidos como água, óleo e soluções químicas com alta eficiência de transferência térmica.'
+    },
+    {
+      icon: Activity,
+      title: 'Tubular aletada',
+      description: 'Ideal para aquecimento de ar em estufas e dutos, com aletas que aumentam a área de troca térmica.'
+    },
+    {
+      icon: Zap,
+      title: 'Blindadas',
+      description: 'Resistências hermeticamente fechadas para ambientes agressivos ou com presença de umidade.'
+    },
+    {
+      icon: Component,
+      title: 'Microtubular espiral',
+      description: 'Alta densidade de potência em espaços reduzidos, perfeita para bicos de injeção e canais quentes.'
+    },
+    {
+      icon: Grid,
+      title: 'Cartucho de baixa/alta carga',
+      description: 'Aquecimento concentrado de alta performance para moldes, estampos e equipamentos de embalagem.'
+    },
+    {
+      icon: Settings,
+      title: 'Projetos especiais',
+      description: 'Desenvolvimento de soluções de aquecimento sob medida para atender necessidades específicas da sua indústria.'
+    },
+    {
+      icon: Package,
+      title: 'Forno para queima tela',
+      description: 'Equipamento especializado para processos de limpeza e manutenção de telas e filtros industriais.'
+    },
+    {
+      icon: Activity,
+      title: 'Termopares',
+      description: 'Sensores de temperatura precisos e confiáveis (tipos J, K, PT100, etc.) para controle perfeito do seu processo.'
+    }
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Produtos - Ultratherm</title>
+        <meta name="description" content="Catálogo completo de resistências elétricas industriais: coleiras, tubulares, cartuchos, termopares e projetos especiais." />
+      </Helmet>
+
+      <div className="pt-16 sm:pt-20">
+        <section className="bg-gradient-to-r from-brand-blue to-blue-800 text-white py-16 sm:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+                Nossos Produtos
+              </h1>
+              <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto">
+                Resistências elétricas e soluções de aquecimento de alta qualidade para a indústria
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-gradient-to-br from-white to-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {products.map((product, index) => (
+                <ServiceCard key={index} {...product} index={index} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-gradient-to-br from-blue-50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-white rounded-2xl shadow-xl p-8 sm:p-12"
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <div>
+                  <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+                    Por Que Escolher a Ultratherm?
+                  </h2>
+                  <ul className="space-y-4">
+                    {[
+                      'Mais de 14 anos de experiência comprovada',
+                      'Produtos com garantia de qualidade',
+                      'Tecnologia de ponta e inovação constante',
+                      'Atendimento personalizado para cada cliente',
+                      'Compromisso com durabilidade e segurança',
+                      'Suporte técnico especializado'
+                    ].map((item, index) => (
+                      <motion.li
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className="flex items-start gap-3"
+                      >
+                        <div className="w-6 h-6 bg-brand-blue rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="text-gray-700">{item}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl p-8 text-center">
+                  <div className="bg-brand-blue w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Flame className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    Precisa de uma solução específica?
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Entre em contato conosco e solicite um orçamento personalizado para sua necessidade
+                  </p>
+                  <a
+                    href="/contact"
+                    className="inline-block bg-brand-blue hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                  >
+                    Solicitar Orçamento
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+};
+
+export default ProductsPage;
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
+import { Flame, Wrench, Lightbulb, HardHat, Clock, TrendingUp } from 'lucide-react';
+import ServiceCard from '@/components/ServiceCard';
+
+const ServicesPage = () => {
+  const services = [
+    {
+      icon: Flame,
+      title: 'Sistemas de Aquecimento Industrial',
+      description: 'Desenvolvimento e implementação de sistemas completos de aquecimento para diversos processos industriais, com tecnologia de ponta e eficiência energética.'
+    },
+    {
+      icon: Wrench,
+      title: 'Manutenção Preventiva',
+      description: 'Programas personalizados de manutenção preventiva para garantir o funcionamento contínuo e prolongar a vida útil dos equipamentos de aquecimento.'
+    },
+    {
+      icon: Lightbulb,
+      title: 'Consultoria Técnica',
+      description: 'Análise especializada de processos e recomendações para otimização de sistemas de aquecimento, redução de custos e aumento de produtividade.'
+    },
+    {
+      icon: HardHat,
+      title: 'Instalação Especializada',
+      description: 'Instalação profissional realizada por equipe altamente qualificada, garantindo segurança, qualidade e conformidade com todas as normas técnicas.'
+    },
+    {
+      icon: Clock,
+      title: 'Suporte 24/7',
+      description: 'Equipe técnica disponível 24 horas por dia, 7 dias por semana, para atendimento emergencial e suporte técnico imediato quando você mais precisa.'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Otimização de Eficiência Energética',
+      description: 'Análise detalhada do consumo energético e implementação de soluções para redução de custos operacionais e impacto ambiental.'
+    }
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Serviços - Ultratherm</title>
+        <meta name="description" content="Soluções completas em aquecimento industrial: instalação, manutenção, consultoria e suporte 24/7. Mais de 14 anos de experiência." />
+      </Helmet>
+
+      <div className="pt-16 sm:pt-20">
+        <section className="bg-gradient-to-r from-brand-blue to-blue-800 text-white py-16 sm:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+                Nossos Serviços
+              </h1>
+              <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto">
+                Soluções completas e personalizadas para todas as suas necessidades de aquecimento industrial
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-gradient-to-br from-white to-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {services.map((service, index) => (
+                <ServiceCard key={index} {...service} index={index} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-24 bg-gradient-to-br from-blue-50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-white rounded-2xl shadow-xl p-8 sm:p-12"
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <div>
+                  <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+                    Por Que Escolher a Ultratherm?
+                  </h2>
+                  <ul className="space-y-4">
+                    {[
+                      'Mais de 14 anos de experiência comprovada',
+                      'Equipe técnica altamente qualificada',
+                      'Tecnologia de ponta e inovação constante',
+                      'Atendimento personalizado para cada cliente',
+                      'Compromisso com qualidade e segurança',
+                      'Suporte técnico disponível 24/7'
+                    ].map((item, index) => (
+                      <motion.li
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className="flex items-start gap-3"
+                      >
+                        <div className="w-6 h-6 bg-brand-blue rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="text-gray-700">{item}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl p-8 text-center">
+                  <div className="bg-brand-blue w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Flame className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    Pronto para começar?
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Entre em contato conosco e solicite um orçamento personalizado
+                  </p>
+                  <a
+                    href="/contact"
+                    className="inline-block bg-brand-blue hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                  >
+                    Solicitar Orçamento
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+};
+
+export default ServicesPage;
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+	darkMode: ['class'],
+	content: [
+		'./pages/**/*.{js,jsx}',
+		'./components/**/*.{js,jsx}',
+		'./app/**/*.{js,jsx}',
+		'./src/**/*.{js,jsx}',
+	],
+	theme: {
+		container: {
+			center: true,
+			padding: '2rem',
+			screens: {
+				'2xl': '1400px',
+			},
+		},
+		extend: {
+			colors: {
+				'brand-blue': '#0066CC',
+				'brand-red': '#DC2626',
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
+				background: 'hsl(var(--background))',
+				foreground: 'hsl(var(--foreground))',
+				primary: {
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))',
+				},
+				secondary: {
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))',
+				},
+				destructive: {
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))',
+				},
+				muted: {
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))',
+				},
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))',
+				},
+				popover: {
+					DEFAULT: 'hsl(var(--popover))',
+					foreground: 'hsl(var(--popover-foreground))',
+				},
+				card: {
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))',
+				},
+			},
+			borderRadius: {
+				lg: 'var(--radius)',
+				md: 'calc(var(--radius) - 2px)',
+				sm: 'calc(var(--radius) - 4px)',
+			},
+			keyframes: {
+				'accordion-down': {
+					from: { height: 0 },
+					to: { height: 'var(--radix-accordion-content-height)' },
+				},
+				'accordion-up': {
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: 0 },
+				},
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
+			},
+		},
+	},
+	plugins: [require('tailwindcss-animate')],
+};
